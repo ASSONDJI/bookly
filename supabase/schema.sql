@@ -138,3 +138,23 @@ grant select on invoices to authenticated;
 
 
 alter publication supabase_realtime add table messages;
+
+
+create policy "users mark messages as read in their bookings"
+  on messages for update
+  using (
+    exists (
+      select 1 from bookings
+      where bookings.id = messages.booking_id
+      and (bookings.client_id = auth.uid() or bookings.provider_id = auth.uid())
+    )
+  )
+  with check (
+    exists (
+      select 1 from bookings
+      where bookings.id = messages.booking_id
+      and (bookings.client_id = auth.uid() or bookings.provider_id = auth.uid())
+    )
+  );
+
+grant update on messages to authenticated;

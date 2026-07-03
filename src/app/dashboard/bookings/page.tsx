@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { StatusBadge } from "@/components/status-badge";
 
 export default async function BookingsPage() {
   const supabase = await createClient();
@@ -30,9 +31,10 @@ export default async function BookingsPage() {
           className="block rounded-md border border-border p-4 hover:bg-secondary"
         >
           <p className="font-medium">{booking.service_title}</p>
-          <p className="text-sm text-muted-foreground">
-            {booking.status} · {(booking.amount_cents / 100).toFixed(2)} €
-          </p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <StatusBadge status={booking.status} />
+            <span>{(booking.amount_cents / 100).toFixed(2)} €</span>
+          </div>
         </Link>
       ))}
     </div>
