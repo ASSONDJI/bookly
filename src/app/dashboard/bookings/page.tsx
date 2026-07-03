@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function BookingsPage() {
@@ -23,12 +24,16 @@ export default async function BookingsPage() {
     <div className="flex flex-col gap-3">
       <h1 className="text-2xl font-bold">Bookings</h1>
       {bookings.map((booking) => (
-        <div key={booking.id} className="rounded-md border border-border p-4">
+        <Link
+          key={booking.id}
+          href={`/dashboard/bookings/${booking.id}`}
+          className="block rounded-md border border-border p-4 hover:bg-secondary"
+        >
           <p className="font-medium">{booking.service_title}</p>
           <p className="text-sm text-muted-foreground">
             {booking.status} · {(booking.amount_cents / 100).toFixed(2)} €
           </p>
-        </div>
+        </Link>
       ))}
     </div>
   );

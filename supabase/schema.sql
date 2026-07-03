@@ -135,3 +135,6 @@ grant select, insert on messages to authenticated;
 grant select, update on notifications to authenticated;
 grant select on payments to authenticated;
 grant select on invoices to authenticated;
+
+
+alter publication supabase_realtime add table messages;
