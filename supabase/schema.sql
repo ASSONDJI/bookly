@@ -120,3 +120,18 @@ create policy "users see payments from their own bookings"
       and (bookings.client_id = auth.uid() or bookings.provider_id = auth.uid())
     )
   );
+
+create policy "users can insert their own profile"
+  on profiles for insert
+  with check (auth.uid() = id);
+
+-- explicit grants required because "automatically expose new tables"
+-- is disabled at the project level (security-by-default choice)
+grant usage on schema public to authenticated, anon;
+grant select, insert on profiles to authenticated;
+grant select on profiles to anon;
+grant select, insert, update on bookings to authenticated;
+grant select, insert on messages to authenticated;
+grant select, update on notifications to authenticated;
+grant select on payments to authenticated;
+grant select on invoices to authenticated;
