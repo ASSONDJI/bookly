@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { createNotification } from "@/lib/notifications";
 
 type Message = {
   id: string;
@@ -18,9 +19,11 @@ const PAGE_SIZE = 20;
 export function ChatRoom({
   bookingId,
   currentUserId,
+  recipientId,
 }: {
   bookingId: string;
   currentUserId: string;
+  recipientId: string;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState("");
@@ -154,6 +157,12 @@ export function ChatRoom({
       booking_id: bookingId,
       sender_id: currentUserId,
       content: text,
+    });
+
+    await createNotification(supabase, {
+      userId: recipientId,
+      type: "new_message",
+      payload: { bookingId, preview: text.slice(0, 60) },
     });
   }
 

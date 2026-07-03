@@ -9,7 +9,6 @@ export default async function BookingDetailPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -20,7 +19,7 @@ export default async function BookingDetailPage({
 
   const { data: booking } = await supabase
     .from("bookings")
-    .select("id, service_title, status")
+    .select("id, service_title, status, client_id, provider_id")
     .eq("id", id)
     .single();
 
@@ -35,7 +34,13 @@ export default async function BookingDetailPage({
         <p className="text-sm text-muted-foreground">{booking.status}</p>
       </div>
 
-      <ChatRoom bookingId={booking.id} currentUserId={user.id} />
+      <ChatRoom
+        bookingId={booking.id}
+        currentUserId={user.id}
+        recipientId={
+          user.id === booking.client_id ? booking.provider_id : booking.client_id
+        }
+      />
     </div>
   );
 }
