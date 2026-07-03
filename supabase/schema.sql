@@ -158,3 +158,17 @@ create policy "users mark messages as read in their bookings"
   );
 
 grant update on messages to authenticated;
+
+alter publication supabase_realtime add table notifications;
+
+create policy "users mark their notifications as read"
+  on notifications for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+grant select, update on notifications to authenticated;
+grant insert on notifications to authenticated;
+
+create policy "authenticated users can create notifications for anyone"
+  on notifications for insert
+  with check (auth.role() = 'authenticated');
