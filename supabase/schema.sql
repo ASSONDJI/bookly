@@ -172,3 +172,18 @@ grant insert on notifications to authenticated;
 create policy "authenticated users can create notifications for anyone"
   on notifications for insert
   with check (auth.role() = 'authenticated');
+
+
+create policy "clients can create a payment for their own booking"
+  on payments for insert
+  with check (
+    exists (
+      select 1 from bookings
+      where bookings.id = payments.booking_id
+      and bookings.client_id = auth.uid()
+    )
+  );
+
+grant insert on payments to authenticated;
+
+grant select, update on payments to service_role;
