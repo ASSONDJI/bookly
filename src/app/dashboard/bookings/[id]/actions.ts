@@ -46,3 +46,32 @@ export async function createPaymentIntent(bookingId: string) {
 
   return { clientSecret: paymentIntent.client_secret };
 }
+
+export async function getInvoiceUrl(bookingId: string) {
+  const supabase = await createClient();
+
+  const { data: payment } = await supabase
+    .from("payments")
+    .select("id")
+    .eq("booking_id", bookingId)
+    .eq("status", "succeeded")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (!payment) return null;
+
+  const { data: invoice } = await supabase
+    .from("invoices")
+    .select("pdf_storage_path")
+    .eq("payment_id", payment.id)
+    .single();
+
+  if (!invoice) return null;
+
+  const { data: signedUrl } = await supabase.storage
+    .from("invoices")
+    .createSignedUrl(invoice.pdf_storage_path, 60);
+
+  return signedUrl?.signedUrl ?? null;
+}
