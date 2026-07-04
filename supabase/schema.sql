@@ -187,3 +187,41 @@ create policy "clients can create a payment for their own booking"
 grant insert on payments to authenticated;
 
 grant select, update on payments to service_role;
+
+-- storage policy: invoices bucket, scoped through payments -> bookings
+create policy "users can read invoices from their own bookings"
+  on storage.objects for select
+  using (
+    bucket_id = 'invoices'
+    and exists (
+      select 1 from invoices
+      join payments on payments.id = invoices.payment_id
+      join bookings on bookings.id = payments.booking_id
+      where invoices.pdf_storage_path = storage.objects.name
+      and (bookings.client_id = auth.uid() or bookings.provider_id = auth.uid())
+    )
+  );
+
+grant select on storage.objects to authenticated;
+
+grant insert, select on invoices to service_role;
+grant insert, select on storage.objects to service_role;
+
+create policy "service role can insert invoice files"
+  on storage.objects for insert
+  with check (bucket_id = 'invoices');
+
+grant select on bookings to service_role;
+
+create policy "users see invoices from their own bookings"
+  on invoices for select
+  using (
+    exists (
+      select 1 from payments
+      join bookings on bookings.id = payments.booking_id
+      where payments.id = invoices.payment_id
+      and (bookings.client_id = auth.uid() or bookings.provider_id = auth.uid())
+    )
+  );
+
+grant select on invoices to authenticated;

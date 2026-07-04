@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ChatRoom } from "@/components/chat-room";
 import { CheckoutForm } from "@/components/checkout-form";
-
+import { InvoiceDownloadButton } from "@/components/invoice-download-button";
 export default async function BookingDetailPage({
   params,
 }: {
@@ -44,6 +44,7 @@ export default async function BookingDetailPage({
       />
 
       <CheckoutForm bookingId={booking.id} />
+      <InvoiceDownloadButton bookingId={booking.id} />
     </div>
   );
 }
