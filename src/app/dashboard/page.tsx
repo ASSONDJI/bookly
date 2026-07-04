@@ -64,9 +64,9 @@ export default async function DashboardHomePage() {
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Recent bookings</h2>
-          <Link
+         <Link
             href="/dashboard/bookings"
-            className="text-sm text-primary hover:underline"
+            className="rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-secondary"
           >
             View all
           </Link>
