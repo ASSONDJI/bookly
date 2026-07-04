@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ChatRoom } from "@/components/chat-room";
+import { CheckoutForm } from "@/components/checkout-form";
 
 export default async function BookingDetailPage({
   params,
@@ -41,6 +42,8 @@ export default async function BookingDetailPage({
           user.id === booking.client_id ? booking.provider_id : booking.client_id
         }
       />
+
+      <CheckoutForm bookingId={booking.id} />
     </div>
   );
 }
