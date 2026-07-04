@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
+import { Logo } from "@/components/logo";
+import { DashboardNav } from "@/components/dashboard-nav";
 
 export default async function DashboardLayout({
   children,
@@ -28,13 +30,11 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen">
       <aside className="w-56 border-r border-border p-4">
-        <p className="mb-6 text-lg font-bold">Bookly</p>
-        <nav className="flex flex-col gap-2 text-sm">
-          <Link href="/dashboard">Home</Link>
-          <Link href="/dashboard/bookings">Bookings</Link>
-          <Link href="/dashboard/profile">Profile</Link>
-          <Link href="/dashboard/settings">Settings</Link>
-        </nav>
+        <Link href="/dashboard" className="mb-6 flex items-center gap-2">
+          <Logo className="h-7 w-7" />
+          <span className="text-lg font-bold">Bookly</span>
+        </Link>
+        <DashboardNav />
       </aside>
 
       <div className="flex-1">

@@ -225,3 +225,21 @@ create policy "users see invoices from their own bookings"
   );
 
 grant select on invoices to authenticated;
+
+
+alter table profiles add column headline text;
+alter table profiles add column bio text;
+alter table profiles add column hourly_rate_cents integer;
+
+create policy "users can update their own profile"
+  on profiles for update
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
+
+grant update on profiles to authenticated;
+
+create policy "clients can create bookings"
+  on bookings for insert
+  with check (client_id = auth.uid());
+
+grant insert on bookings to authenticated;

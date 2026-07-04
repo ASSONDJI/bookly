@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { ChatRoom } from "@/components/chat-room";
 import { CheckoutForm } from "@/components/checkout-form";
 import { InvoiceDownloadButton } from "@/components/invoice-download-button";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 export default async function BookingDetailPage({
   params,
 }: {
@@ -30,6 +32,13 @@ export default async function BookingDetailPage({
 
   return (
     <div className="flex flex-col gap-4">
+      <Link
+        href="/dashboard/bookings"
+        className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to bookings
+      </Link>
       <div>
         <h1 className="text-2xl font-bold">{booking.service_title}</h1>
         <p className="text-sm text-muted-foreground">{booking.status}</p>
